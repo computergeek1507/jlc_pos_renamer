@@ -140,6 +140,7 @@ int main(int argc, char* argv[]) {
 						rot = rot % 360;
 						line = lineData[0] + "," + lineData[1] + "," + lineData[2] + "," + lineData[3] + ","
 							+ lineData[4] + "," + std::to_string((float)rot) + "," + lineData[6];
+						break;
 					}
 				}
 			}
