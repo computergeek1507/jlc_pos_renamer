@@ -38,24 +38,35 @@ std::vector<std::string> split(std::string const& s, std::string const& delimite
 	return res;
 }
 
-std::vector<Correction> ReadPartDataBase() {
+std::vector<Correction> ReadPartDataBase(std::string const& exePath) {
 	std::vector<Correction> parts;
 
 	auto path = std::filesystem::current_path().string();
 	path += (std::filesystem::path::preferred_separator);
 	path += ("cpl_rotations_db.csv");
+	std::cout << path << "\n";
 
+	if (!std::filesystem::exists(path))
+	{
+		path = exePath;
+		path += (std::filesystem::path::preferred_separator);
+		path += ("cpl_rotations_db.csv");
+		std::cout << path << "\n";
+	}
 	if (!std::filesystem::exists(path))
 	{
 		path = "cpl_rotations_db.csv";
 
 	}
 	if (!std::filesystem::exists(path)) {
+		std::cout << "Database not found ";
+		std::cout << path << "\n";
+		getchar();
 		return parts;
 	}
 
 	std::fstream inFile;
-	inFile.open("cpl_rotations_db.csv", std::ios::in);
+	inFile.open(path, std::ios::in);
 
 	if (inFile.is_open()) {
 		std::string line;
@@ -86,7 +97,11 @@ int main(int argc, char* argv[]) {
 		std::cout << "not enought commandline args\n";
 		return 1;
 	}
-	std::vector<Correction> part_db = ReadPartDataBase();
+	std::cout << argv[0] << "\n";
+	auto dir = std::filesystem::path(argv[0]).parent_path();
+	std::cout << dir.string() << "\n";
+
+	std::vector<Correction> part_db = ReadPartDataBase(dir.string());
 	std::string const fileName{ argv[1] };
 	std::string newfileName{ fileName };
 	replace(newfileName,"pos.csv", "jlc-pos.csv" );
@@ -135,6 +150,5 @@ int main(int argc, char* argv[]) {
 		inFile.close();
 	}
 	outFile.close();
-
 	return 0;
 }
