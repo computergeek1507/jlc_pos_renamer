@@ -40,7 +40,17 @@ std::vector<std::string> split(std::string const& s, std::string const& delimite
 
 std::vector<Correction> ReadPartDataBase() {
 	std::vector<Correction> parts;
-	if (!std::filesystem::exists("cpl_rotations_db.csv")) {
+
+	auto path = std::filesystem::current_path().string();
+	path += (std::filesystem::path::preferred_separator);
+	path += ("cpl_rotations_db.csv");
+
+	if (!std::filesystem::exists(path))
+	{
+		path = "cpl_rotations_db.csv";
+
+	}
+	if (!std::filesystem::exists(path)) {
 		return parts;
 	}
 
